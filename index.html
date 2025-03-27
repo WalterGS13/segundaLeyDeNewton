@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Segunda Ley de Newton</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.7.0/math.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Segunda Ley de Newton</h1>
+        <h2>Acción y Reacción</h2>
+        
+        <div class="simulation-container">
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label for="mass1">Masa (kg):</label>
+                    <input type="number" id="mass1" min="0.5" max="5" value="1" step="0.1">
+                </div>
+                
+                <div class="control-group">
+                    <label for="aceleracion">Aceleracion m/s2:</label>
+                    <input type="number" id="aceleracion" min="5" max="20" value="10" step="0.1">
+                </div>
+                
+                <div class="control-group">
+                    <label for="position">Distancia a recorrer (m):</label>
+                    <input type="number" id="position" min="1" max="10000" value="150" step="1">
+                </div>
+                
+                <div class="buttons">
+                    <button id="calculateButton">Calcular</button>
+                </div>
+            </div>
+            
+            <div class="results">
+                <p>Fuerza: <span id="forceResult">-</span> N</p>
+                <p>Tiempo: <span id="timeResult">-</span> s</p>
+                <p>Velocidad Final: <span id="velocityResult">-</span> m/s</p>
+            </div>
+        </div>
+
+        <div class="simulation-area">
+            <div class="track">
+                <span style="left: 0%;">0</span>
+                <span style="left: 25%;">25</span>
+                <span style="left: 50%;">50</span>
+                <span style="left: 75%;">75</span>
+                <span style="left: 100%;">100</span>
+            </div>
+            <div id="cart1" class="cart">
+                <div class="wheels">
+                    <div class="wheel"></div>
+                    <div class="wheel"></div>
+                </div>
+                <div class="label">m1</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("calculateButton").addEventListener("click", function() {
+            let masa = parseFloat(document.getElementById("mass1").value);
+            let aceleracion = parseFloat(document.getElementById("aceleracion").value);
+            let posicion = parseFloat(document.getElementById("position").value);
+            let cart = document.getElementById("cart1");
+
+            if (masa > 0) {
+                let fuerza = aceleracion * masa;
+                let tiempo = Math.sqrt((2 * posicion) / aceleracion);
+                let velocidadFinal = aceleracion * tiempo;
+                
+                document.getElementById("forceResult").textContent = fuerza.toFixed(2);
+                document.getElementById("timeResult").textContent = tiempo.toFixed(2);
+                document.getElementById("velocityResult").textContent = velocidadFinal.toFixed(2);
+                
+                let distanciaFinal = (0.5 * aceleracion * Math.pow(tiempo, 2)) * 2; 
+                distanciaFinal = Math.min(distanciaFinal, 10000);
+                
+                cart.style.transition = `left ${tiempo}s linear`;
+                cart.style.left = `${distanciaFinal}px`;
+            } else {
+                alert("La masa debe ser mayor que 0");
+            }
+        });
+    </script>
+</body>
+</html>
