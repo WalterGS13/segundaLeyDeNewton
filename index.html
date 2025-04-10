@@ -38,11 +38,11 @@
             </div>
             
             <div class="results">
-                <p>Peso: <span id="forceResult">-</span> N</p>
-                <p>Fuerza de fricción: <span id="friccionResult">-</span> N</p>
-                <p>Fuerza total: <span id="totalForceResult">-</span> N</p>
-                <p>Tiempo: <span id="timeResult">-</span> s</p>
-                <p>Velocidad Final: <span id="velocityResult">-</span> m/s</p>
+                <p>Peso: Masa * Gravedad = <span id="forceResult"> -</span> N</p>
+                <p>Fuerza de fricción: Friccion dinamica * Peso =<span id="friccionResult"> -</span> N</p>
+                <p>Fuerza total: Masa * aceleracion + Fuerza de friccion =<span id="totalForceResult"> -</span> N</p>
+                <p>Tiempo: <span id="timeResult"> -</span> s</p>
+                <p>Velocidad Final: <span id="velocityResult"> -</span> m/s</p>
             </div>
         </div>
 
@@ -85,7 +85,7 @@
             return;
         }
 
-        const aceleracionNeta = fuerzaTotal / masa;
+        const aceleracionNeta = (fuerzaAplicada - friccion) / masa;
         const tiempo = Math.sqrt((2 * posicion) / aceleracionNeta);
         const velocidadFinal = aceleracionNeta * tiempo;
 
