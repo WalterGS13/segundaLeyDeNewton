@@ -9,23 +9,30 @@
 </head>
 <body>
     <div class="container">
-        <h1>Segunda Ley de Newton</h1>
-        <h2>Ley fundamental de la dinámica</h2>
+        <h1>Segunda y tercera Ley de Newton</h1>
+        <h2>Ley fundamental de la dinámica y Ley de accion/reaccion</h2>
         
         <div class="simulation-container">
             <div class="controls-panel">
                 <div class="control-group">
                     <label for="mass1">Masa (kg):</label>
                     <input type="number" id="mass1" min="0.5" max="5" value="1" step="0.1">
+
+                    <label for="aceleracion">Aceleracion m/s2:</label>
+                    <input type="number" id="aceleracion" min="5" max="20" value="10" step="0.1">
+
                 </div>
                 
                 <div class="control-group">
-                    <label for="aceleracion">Aceleracion m/s2:</label>
-                    <input type="number" id="aceleracion" min="5" max="20" value="10" step="0.1">
+                    
                 </div>
                 
                 <div class="control-group">
                     <label for="position">Distancia a recorrer (m):</label>
+                </div>
+                <div class="control-group">
+                    <label for="friccion">Fricción dinámica (Uc):</label>
+                    <input type="number" id="friccion" min="0" max="1" step="0.01" value="0.2">
                     <input type="number" id="position" min="1" max="10000" value="150" step="1">
                 </div>
                 
@@ -36,6 +43,8 @@
             
             <div class="results">
                 <p>Fuerza: <span id="forceResult">-</span> N</p>
+                <p>Fuerza de fricción: <span id="friccionResult">-</span> N</p>
+                <p>Fuerza total: <span id="totalForceResult">-</span> N</p>
                 <p>Tiempo: <span id="timeResult">-</span> s</p>
                 <p>Velocidad Final: <span id="velocityResult">-</span> m/s</p>
             </div>
@@ -60,30 +69,45 @@
     </div>
 
     <script>
-        document.getElementById("calculateButton").addEventListener("click", function() {
-            let masa = parseFloat(document.getElementById("mass1").value);
-            let aceleracion = parseFloat(document.getElementById("aceleracion").value);
-            let posicion = parseFloat(document.getElementById("position").value);
-            let cart = document.getElementById("cart1");
+       document.getElementById("calculateButton").addEventListener("click", function () {
+    const masa = parseFloat(document.getElementById("mass1").value);
+    const aceleracion = parseFloat(document.getElementById("aceleracion").value);
+    const posicion = parseFloat(document.getElementById("position").value);
+    const uc = parseFloat(document.getElementById("friccion").value);
+    const gravedad = 9.8;
+    const cart = document.getElementById("cart1");
 
-            if (masa > 0) {
-                let fuerza = aceleracion * masa;
-                let tiempo = Math.sqrt((2 * posicion) / aceleracion);
-                let velocidadFinal = aceleracion * tiempo;
-                
-                document.getElementById("forceResult").textContent = fuerza.toFixed(2);
-                document.getElementById("timeResult").textContent = tiempo.toFixed(2);
-                document.getElementById("velocityResult").textContent = velocidadFinal.toFixed(2);
-                
-                let distanciaFinal = (0.5 * aceleracion * Math.pow(tiempo, 2)) * 2; 
-                distanciaFinal = Math.min(distanciaFinal, 10000);
-                
-                cart.style.transition = `left ${tiempo}s linear`;
-                cart.style.left = `${distanciaFinal}px`;
-            } else {
-                alert("La masa debe ser mayor que 0");
-            }
-        });
+    if (masa > 0) {
+        const peso = masa * gravedad;
+        const friccion = uc * peso;
+        const fuerzaAplicada = masa * aceleracion;
+        const fuerzaTotal = fuerzaAplicada - friccion;
+
+        // Si la fricción es mayor que la fuerza aplicada, el objeto no se moverá
+        if (fuerzaTotal <= 0) {
+            alert("La fuerza de fricción es mayor o igual a la fuerza aplicada. El carrito no se mueve.");
+            return;
+        }
+
+        const aceleracionNeta = fuerzaTotal / masa;
+        const tiempo = Math.sqrt((2 * posicion) / aceleracionNeta);
+        const velocidadFinal = aceleracionNeta * tiempo;
+
+        document.getElementById("forceResult").textContent = fuerzaAplicada.toFixed(2);
+        document.getElementById("friccionResult").textContent = friccion.toFixed(2);
+        document.getElementById("totalForceResult").textContent = fuerzaTotal.toFixed(2);
+        document.getElementById("timeResult").textContent = tiempo.toFixed(2);
+        document.getElementById("velocityResult").textContent = velocidadFinal.toFixed(2);
+
+        const porcentajeDistancia = Math.min((posicion / 400) * 100, 100); // Para simular dentro de 400m visibles
+        cart.style.transition = `left ${tiempo}s linear`;
+        cart.style.left = `${porcentajeDistancia}%`;
+    } else {
+        alert("La masa debe ser mayor que 0");
+    }
+});
+
     </script>
 </body>
 </html>
+
