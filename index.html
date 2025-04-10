@@ -85,9 +85,9 @@
             return;
         }
 
-        const aceleracionNeta = (fuerzaAplicada - friccion) / masa;
-        const tiempo = Math.sqrt((2 * posicion) / aceleracionNeta);
-        const velocidadFinal = aceleracionNeta * tiempo;
+        //const aceleracionNeta = (fuerzaAplicada - friccion) / masa;
+        const tiempo = Math.sqrt((2 * posicion) / aceleracion);
+        const velocidadFinal = aceleracion * tiempo;
 
         document.getElementById("forceResult").textContent = peso.toFixed(2);
         document.getElementById("friccionResult").textContent = friccion.toFixed(2);
