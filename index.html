@@ -28,12 +28,8 @@
                 </div>
                 
                 <div class="control-group">
-                    <label for="position">Distancia a recorrer (m):</label>
-                </div>
-                <div class="control-group">
                     <label for="friccion">Fricción dinámica (Uc):</label>
                     <input type="number" id="friccion" min="0" max="1" step="0.01" value="0.2">
-                    <input type="number" id="position" min="1" max="10000" value="150" step="1">
                 </div>
                 
                 <div class="buttons">
@@ -42,7 +38,7 @@
             </div>
             
             <div class="results">
-                <p>Fuerza: <span id="forceResult">-</span> N</p>
+                <p>Peso: <span id="forceResult">-</span> N</p>
                 <p>Fuerza de fricción: <span id="friccionResult">-</span> N</p>
                 <p>Fuerza total: <span id="totalForceResult">-</span> N</p>
                 <p>Tiempo: <span id="timeResult">-</span> s</p>
@@ -72,7 +68,7 @@
        document.getElementById("calculateButton").addEventListener("click", function () {
     const masa = parseFloat(document.getElementById("mass1").value);
     const aceleracion = parseFloat(document.getElementById("aceleracion").value);
-    const posicion = parseFloat(document.getElementById("position").value);
+    const posicion = parseFloat(350);
     const uc = parseFloat(document.getElementById("friccion").value);
     const gravedad = 9.8;
     const cart = document.getElementById("cart1");
@@ -81,7 +77,7 @@
         const peso = masa * gravedad;
         const friccion = uc * peso;
         const fuerzaAplicada = masa * aceleracion;
-        const fuerzaTotal = fuerzaAplicada - friccion;
+        const fuerzaTotal = fuerzaAplicada + friccion;
 
         // Si la fricción es mayor que la fuerza aplicada, el objeto no se moverá
         if (fuerzaTotal <= 0) {
@@ -93,7 +89,7 @@
         const tiempo = Math.sqrt((2 * posicion) / aceleracionNeta);
         const velocidadFinal = aceleracionNeta * tiempo;
 
-        document.getElementById("forceResult").textContent = fuerzaAplicada.toFixed(2);
+        document.getElementById("forceResult").textContent = peso.toFixed(2);
         document.getElementById("friccionResult").textContent = friccion.toFixed(2);
         document.getElementById("totalForceResult").textContent = fuerzaTotal.toFixed(2);
         document.getElementById("timeResult").textContent = tiempo.toFixed(2);
